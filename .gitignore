@@ -1,0 +1,23 @@
+# Dados gerados durante o uso da aplicação
+tasks.json
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual, caso seja criado futuramente
+.venv/
+venv/
+
+# Configurações de editores
+.vscode/
+.idea/
+
+# Arquivos temporários e logs
+*.log
+*.tmp
+*.swp
+
+# Sistema operacional
+Thumbs.db
+.DS_Store
