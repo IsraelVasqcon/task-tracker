@@ -50,3 +50,11 @@ Rejeitar uma estrutura principal que não seja lista.
 Rejeitar uma tarefa sem campos obrigatórios.
 Rejeitar tarefas com IDs duplicados.
 Criar tasks.json automaticamente.
+
+Argumentos do comando add
+Reconhecer o comando add.
+Receber uma descrição entre aspas.
+Aceitar descrição com várias palavras.
+Aceitar descrição com acentos.
+Rejeitar descrição ausente.
+Mostrar ajuda com add --help.

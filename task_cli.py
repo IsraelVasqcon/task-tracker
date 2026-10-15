@@ -302,14 +302,16 @@ def create_parser() -> argparse.ArgumentParser:
         title="comandos",
     )
 
-    subparsers.add_parser(
+    add_parser = subparsers.add_parser(
         "add",
         help="Adiciona uma nova tarefa.",
+    
     )
 
-    subparsers.add_parser(
-        "update",
-        help="Atualiza a descrição de uma tarefa.",
+    add_parser.add_argument(
+        "description",
+        help="Descrição da nova tarefa.",
+    
     )
 
     subparsers.add_parser(
@@ -371,6 +373,14 @@ def execute_command(
         parser.print_help()
         return
 
+    if args.command == "add":
+        print(f"Descrição recebida: {args.description}")
+        print(
+            "O comando 'add' foi reconhecido, "
+            "mas o salvamento ainda não foi implementado."
+        )
+        return
+
     if args.command == "list":
         tasks = service.list_tasks(args.status)
         print_tasks(tasks)
@@ -380,6 +390,7 @@ def execute_command(
         f"O comando '{args.command}' foi reconhecido, "
         "mas ainda não foi implementado."
     )
+
 #Função Principal: Executa o programa(main)
 def main() -> int:
     """Inicializa e executa a aplicação."""
