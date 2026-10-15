@@ -16,7 +16,7 @@ from typing import Any
 
 #Constantes:=========================================================================================
 
-VALID_STATUSES = ("to do", "in-progress", "done")
+VALID_STATUSES = ("todo", "in-progress", "done")
 DATA_FILE_NAME = "tasks.json"
 
 #Classe: Task========================================================================================
