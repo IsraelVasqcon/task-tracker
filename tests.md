@@ -58,3 +58,34 @@ Aceitar descrição com várias palavras.
 Aceitar descrição com acentos.
 Rejeitar descrição ausente.
 Mostrar ajuda com add --help.
+
+Checkpoint 3: adição de tarefas
+
+Estrutura e execução
+Validar a sintaxe de task_cli.py.
+Instanciar TaskService com JsonTaskRepository.
+Executar o comando add com uma descrição.
+Executar o comando list.
+
+Criação
+
+Adicionar a primeira tarefa com ID 1.
+Adicionar a segunda tarefa com ID 2.
+Salvar o status inicial como todo.
+Salvar createdAt.
+Salvar updatedAt.
+Manter createdAt e updatedAt iguais na criação.
+
+Descrição
+
+Remover espaços do início e do fim.
+Rejeitar uma descrição vazia.
+Rejeitar uma descrição formada somente por espaços.
+Preservar caracteres acentuados.
+
+Listagem
+
+Listar todas as tarefas.
+Listar tarefas com status todo.
+Retornar lista vazia para done.
+Retornar lista vazia para in-progress.

@@ -1,4 +1,4 @@
-# Task CLI. Usaremos: Python
+#Task CLI. Usaremos: Python
 #encapsulamento;
 #abstração;
 #classes.
@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
+from altair import Description
 
 #Constantes:=========================================================================================
 
@@ -80,6 +81,7 @@ class Task:
 
         self.validate()
         return asdict(self)
+    
 #Função: Dicionário
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Task":
@@ -140,7 +142,7 @@ class JsonTaskRepository:
 
         return self._file_path
     
-#Função: Criação do arquivo
+#Função: Criação do arquivo JSON
     def ensure_file_exists(self) -> None:
         """Cria o arquivo JSON com uma lista vazia se ele não existir."""
 
@@ -255,10 +257,75 @@ class JsonTaskRepository:
 #Classe: Versões do Serviço==========================================================================
 class TaskService:
     """Contém as regras de negócio do Task Tracker."""
-#Função: Init
+    #Função: Init
     def __init__(self, repository: JsonTaskRepository) -> None:
         self._repository = repository
-#Função: Inicialização
+#Função: Init storage
+    def initialize_storage(self) -> list:
+       """Inicializa o arquivo e devolve as tarefas existentes."""
+       return self._repository.load()
+
+#Função: Adiciona tarefas    
+    def add_task(self, description: str) -> Task:
+        """Cria, salva e devolve uma nova tarefa."""
+        normalized_description = description.strip() # pode ser que terei que voltar aqui e mudar de Description para description
+        if not normalized_description:
+            raise TaskTrackerError(
+                "A descrição da tarefa não pode estar vazia."
+            )
+        tasks = self._repository.load()
+        task_id = self._get_next_id(tasks)
+        timestamp = current_timestamp()
+
+        new_task = Task(
+            id=task_id,
+            description=normalized_description,
+            status="todo",
+            createdAt=timestamp,
+            updatedAt=timestamp,
+        )
+        new_task.validate()
+        tasks.append(new_task)
+        self._repository.save(tasks)
+
+        return new_task
+    
+#Função: Lista tarefas
+    def list_tasks(
+        self,
+        status: str | None = None,    ) -> list:
+        """Lista todas as tarefas ou filtra pelo status."""
+        tasks = self._repository.load()
+        if status is None:
+            return tasks
+
+        if status not in VALID_STATUSES:
+            allowed_statuses = ", ".join(VALID_STATUSES)
+            raise TaskTrackerError(
+                "Filtro de status inválido. "
+                f"Valores permitidos: {allowed_statuses}."
+            )
+        return [
+            task
+            for task in tasks
+            if task.status == status
+        ]
+#Função: get ID
+    @staticmethod
+    def _get_next_id(tasks: list[Task]) -> int:
+        """Calcula o próximo ID sem reutilizar IDs existentes."""
+
+        if not tasks:
+            return 1
+
+        highest_id = max(task.id for task in tasks)
+
+        return highest_id + 1
+
+#Função: Init repository
+    def __init__(self, repository: JsonTaskRepository) -> None:
+        self._repository = repository
+#Função: Inicialização do arquivo e devolve a tarefa
     def initialize_storage(self) -> list:
         """Inicializa o arquivo e devolve as tarefas existentes."""
 
@@ -365,25 +432,25 @@ def print_tasks(tasks: list[Task]) -> None:
 def execute_command(
     args: argparse.Namespace,
     service: TaskService,
-    parser: argparse.ArgumentParser,
-) -> None:
+    parser: argparse.ArgumentParser,) -> None:
     """Direciona o comando recebido para a funcionalidade correta."""
 
     if args.command is None:
         parser.print_help()
+        
         return
 
     if args.command == "add":
-        print(f"Descrição recebida: {args.description}")
-        print(
-            "O comando 'add' foi reconhecido, "
-            "mas o salvamento ainda não foi implementado."
-        )
+        task = service.add_task(args.description)
+
+        print(f"Tarefa adicionada com sucesso (ID: {task.id})")
+        
         return
 
     if args.command == "list":
         tasks = service.list_tasks(args.status)
         print_tasks(tasks)
+        
         return
 
     print(
@@ -403,10 +470,11 @@ def main() -> int:
     )
 
     service = TaskService(repository)
-
+    
     try:
-        service.initialize_storage()
+        repository.ensure_file_exists()
         execute_command(args, service, parser)
+        
         return 0
 
     except TaskTrackerError as error:
@@ -414,8 +482,7 @@ def main() -> int:
             f"Erro: {error}",
             file=sys.stderr,
         )
-
-        return 1
+    return 1
 
 
 if __name__ == "__main__":
