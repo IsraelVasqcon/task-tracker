@@ -9,12 +9,12 @@
 import argparse
 import json
 import sys
+
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
-from altair import Description
 
 #Constantes:========================================================================================
 
@@ -352,9 +352,10 @@ class TaskService:
         tasks = self._repository.load()
         task_to_delete = self._find_task_by_id(tasks, task_id)
 
-        updated_tasks = [task
-        for task in tasks
-         if task.id != task_id
+        updated_tasks = [
+            task
+            for task in tasks
+            if task.id != task_id
     ]
 
         self._repository.save(updated_tasks)
@@ -432,39 +433,7 @@ class TaskService:
      self._repository.save(tasks)
 
      return task
-
-#Função: Init repository
-    def __init__(self, repository: JsonTaskRepository) -> None:
-        self._repository = repository
-#Função: Inicialização do arquivo e devolve a tarefa
-    def initialize_storage(self) -> list:
-        """Inicializa o arquivo e devolve as tarefas existentes."""
-
-        return self._repository.load()
-    
-#Função: Lista tarefas
-    def list_tasks(self, status: str | None = None) -> list:
-        """Lista todas as tarefas ou filtra pelo status."""
-
-        tasks = self._repository.load()
-
-        if status is None:
-            return tasks
-
-        if status not in VALID_STATUSES:
-            allowed_statuses = ", ".join(VALID_STATUSES)
-
-            raise TaskTrackerError(
-                "Filtro de status inválido. "
-                f"Valores permitidos: {allowed_statuses}."
-            )
-
-        return [
-            task
-            for task in tasks
-            if task.status == status
-        ]
-        
+      
 #Função: Parse CLI
 def create_parser() -> argparse.ArgumentParser:
     """Cria e configura o interpretador de comandos da aplicação."""
