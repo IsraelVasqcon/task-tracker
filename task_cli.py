@@ -290,11 +290,42 @@ class TaskService:
         self._repository.save(tasks)
 
         return new_task
+
+#Função: Atualiza/Update task  
+    def update_task(
+        self,
+        task_id: int,description: str,) -> Task:
+        """Atualiza a descrição de uma tarefa."""
+        self._validate_task_id(task_id)
+
+        normalized_description = description.strip()
+
+        if not normalized_description:
+         raise TaskTrackerError(
+            "A descrição da tarefa não pode estar vazia."
+        )
+
+        tasks = self._repository.load()
+        task = self._find_task_by_id(tasks, task_id)
+
+        if task.description == normalized_description:
+         raise TaskTrackerError(
+            f"A tarefa com ID {task_id} já possui "
+            "essa descrição."
+        )
+
+        task.description = normalized_description
+        task.updatedAt = current_timestamp()
+        task.validate()
+
+        self._repository.save(tasks)
+
+        return task
     
 #Função: Lista tarefas/List tasks
     def list_tasks(
         self,
-        status: str | None = None,    ) -> list:
+        status: str | None = None,) -> list:
         """Lista todas as tarefas ou filtra pelo status."""
         tasks = self._repository.load()
         if status is None:
@@ -447,6 +478,22 @@ def create_parser() -> argparse.ArgumentParser:
         "delete",
         help="Exclui uma tarefa.",
     )
+    
+    update_parser = subparsers.add_parser(
+    "update",
+    help="Atualiza a descrição de uma tarefa.",
+    )
+
+    update_parser.add_argument(
+    "task_id",
+    type=int,
+    help="ID da tarefa que será atualizada.",
+    )
+
+    update_parser.add_argument(
+    "description",
+    help="Nova descrição da tarefa.",
+    )
 
     mark_in_progress_parser = subparsers.add_parser(
     "mark-in-progress",
@@ -520,6 +567,16 @@ def execute_command(
         print(f"Tarefa adicionada com sucesso (ID: {task.id})")
         
         return
+    
+    if args.command == "update":
+       task = service.update_task(
+        args.task_id,
+        args.description,
+    )
+
+       print(f"Tarefa com ID {task.id} atualizada com sucesso.")
+       
+       return
 
     if args.command == "mark-in-progress":
        task = service.update_task_status(

@@ -90,7 +90,7 @@ Listar tarefas com status todo.
 Retornar lista vazia para done.
 Retornar lista vazia para in-progress.
 
-Checkpoint 4: alteração de status
+XXXXXXX Checkpoint 4: alteração de status XXXXXXXXX
 
 Mark in progress
 Receber um ID inteiro.
@@ -117,4 +117,30 @@ Rejeitar ID não numérico.
 Rejeitar ID ausente.
 Tratar tarefa inexistente.
 Impedir a aplicação repetida do mesmo status.
+Não modificar o JSON quando ocorrer erro.
+
+Checkpoint 5: atualização de tarefas
+
+Atualização válida
+Atualizar a descrição pelo ID.
+Preservar o ID.
+Preservar o status.
+Preservar createdAt.
+Atualizar updatedAt.
+Persistir a alteração em tasks.json.
+Descrição
+Remover espaços do início e do final.
+Rejeitar descrição vazia.
+Rejeitar descrição composta somente por espaços.
+Preservar acentos e caracteres especiais.
+Rejeitar atualização com a descrição atual.
+Não alterar updatedAt quando a descrição não mudar.
+Identificação
+Rejeitar ID igual a zero.
+Rejeitar ID negativo.
+Rejeitar ID não numérico.
+Rejeitar ID ausente.
+Tratar ID inexistente.
+Integridade
+Não alterar outras tarefas.
 Não modificar o JSON quando ocorrer erro.
