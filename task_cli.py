@@ -1,9 +1,10 @@
-#Task CLI. Usaremos: Python
+#===============Task Tracker CLI. Usaremos: Python Nativo sem frameworks importados=================
+#Estrutura do código abaixo:
 #encapsulamento;
 #abstração;
 #classes.
 
-#Bibliotécas:========================================================================================
+#Bibliotécas/Libraries:=============================================================================
 
 import argparse
 import json
@@ -15,12 +16,12 @@ from pathlib import Path
 from typing import Any
 from altair import Description
 
-#Constantes:=========================================================================================
+#Constantes:========================================================================================
 
 VALID_STATUSES = ("todo", "in-progress", "done")
 DATA_FILE_NAME = "tasks.json"
 
-#Classe: Task========================================================================================
+#Classe: Task=======================================================================================
 
 class TaskTrackerError(Exception):
     """Representa um erro conhecido e tratável da aplicação."""
@@ -32,7 +33,7 @@ class Task:
     status: str
     createdAt: str
     updatedAt: str
-#Função: Validação
+#Função: Validação/Validate
     def validate(self) -> None:
         """Valida os campos da tarefa."""
 
@@ -82,7 +83,7 @@ class Task:
         self.validate()
         return asdict(self)
     
-#Função: Dicionário
+#Função: Dicionário/Dictionary
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Task":
         """Cria uma tarefa a partir de um dicionário."""
@@ -116,7 +117,7 @@ class Task:
         task.validate()
         return task
     
-#Função: Tempo
+#Função: Tempo/Timestemp
 def current_timestamp() -> str:
     """Retorna o instante atual em UTC e no formato ISO 8601."""
 
@@ -127,7 +128,7 @@ def get_data_file_path() -> Path:
 
     return Path.cwd() / DATA_FILE_NAME
 
-#Classe: Repositório JSON===================================================================================
+#Classe: Repositório JSON/Create JSON repository====================================================
 
 class JsonTaskRepository:
     """Controla o armazenamento das tarefas em um arquivo JSON."""
@@ -135,14 +136,14 @@ class JsonTaskRepository:
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
 
-#Função: Caminho
+#Função: Caminho/File Path
     @property
     def file_path(self) -> Path:
         """Disponibiliza o caminho do arquivo somente para leitura."""
 
         return self._file_path
     
-#Função: Criação do arquivo JSON
+#Função: Criação do arquivo JSON/Create JSON file
     def ensure_file_exists(self) -> None:
         """Cria o arquivo JSON com uma lista vazia se ele não existir."""
 
@@ -160,7 +161,7 @@ class JsonTaskRepository:
                 f"'{self._file_path}'."
             ) from error
             
-#Função: Carregamento
+#Função: Carregamento/Load data
     def load(self) -> list:
         """Lê, valida e devolve todas as tarefas."""
         
@@ -214,7 +215,7 @@ class JsonTaskRepository:
 
         return tasks
     
-#Função: Gravação
+#Função: Gravação/Save tasks
     def save(self, tasks: list[Task]) -> None:
         """Valida e grava a lista completa de tarefas."""
 
@@ -242,7 +243,7 @@ class JsonTaskRepository:
                 f"'{self._file_path}'."
             ) from error
             
-#Função: Validação
+#Função: Validação/Validate
     @staticmethod
     def _validate_unique_ids(tasks: list[Task]) -> None:
         """Verifica se existem IDs repetidos."""
@@ -254,7 +255,7 @@ class JsonTaskRepository:
                 "O arquivo tasks.json contém IDs duplicados."
             )
 
-#Classe: Versões do Serviço==========================================================================
+#Classe: Versões do Serviço/Service Versions========================================================
 class TaskService:
     """Contém as regras de negócio do Task Tracker."""
     #Função: Init
@@ -265,10 +266,10 @@ class TaskService:
        """Inicializa o arquivo e devolve as tarefas existentes."""
        return self._repository.load()
 
-#Função: Adiciona tarefas    
+#Função: Adiciona tarefas/Add tasks   
     def add_task(self, description: str) -> Task:
         """Cria, salva e devolve uma nova tarefa."""
-        normalized_description = description.strip() # pode ser que terei que voltar aqui e mudar de Description para description
+        normalized_description = description.strip() 
         if not normalized_description:
             raise TaskTrackerError(
                 "A descrição da tarefa não pode estar vazia."
@@ -290,7 +291,7 @@ class TaskService:
 
         return new_task
     
-#Função: Lista tarefas
+#Função: Lista tarefas/List tasks
     def list_tasks(
         self,
         status: str | None = None,    ) -> list:
@@ -310,7 +311,7 @@ class TaskService:
             for task in tasks
             if task.status == status
         ]
-#Função: get ID
+#Função: Pega/Get ID
     @staticmethod
     def _get_next_id(tasks: list[Task]) -> int:
         """Calcula o próximo ID sem reutilizar IDs existentes."""
@@ -321,6 +322,66 @@ class TaskService:
         highest_id = max(task.id for task in tasks)
 
         return highest_id + 1
+    
+#Função: Encontra/Find ID  
+    @staticmethod
+    def _find_task_by_id(tasks: list[Task], task_id: int, ) -> Task:
+      """Localiza uma tarefa pelo ID."""
+
+      for task in tasks:
+        if task.id == task_id:
+           return task
+
+        raise TaskTrackerError(
+        f"Tarefa com ID {task_id} não encontrada."
+    )
+
+#Função: Valida/Validate ID
+    @staticmethod
+    def _validate_task_id(task_id: int) -> None:
+       """Valida se o ID informado é um número inteiro positivo."""
+
+       if isinstance(task_id, bool) or not isinstance(task_id, int):
+        raise TaskTrackerError(
+            "O ID da tarefa deve ser um número inteiro."
+    )
+       if task_id <= 0:
+        raise TaskTrackerError(
+            "O ID da tarefa deve ser maior que zero."
+    )
+        
+#Função: Atualiza lista/Update the list
+    def update_task_status(
+     self,
+     task_id: int, new_status: str,) -> Task:
+     """Altera o status de uma tarefa e devolve a tarefa atualizada."""
+
+     self._validate_task_id(task_id)
+
+     if new_status not in VALID_STATUSES:
+        allowed_statuses = ", ".join(VALID_STATUSES)
+
+        raise TaskTrackerError(
+            "Status inválido. "
+            f"Valores permitidos: {allowed_statuses}."
+    )
+
+     tasks = self._repository.load()
+     task = self._find_task_by_id(tasks, task_id)
+
+     if task.status == new_status:
+        raise TaskTrackerError(
+            f"A tarefa com ID {task_id} já possui "
+            f"o status '{new_status}'."
+    )
+
+     task.status = new_status
+     task.updatedAt = current_timestamp()
+     task.validate()
+
+     self._repository.save(tasks)
+
+     return task
 
 #Função: Init repository
     def __init__(self, repository: JsonTaskRepository) -> None:
@@ -353,6 +414,7 @@ class TaskService:
             for task in tasks
             if task.status == status
         ]
+        
 #Função: Parse CLI
 def create_parser() -> argparse.ArgumentParser:
     """Cria e configura o interpretador de comandos da aplicação."""
@@ -386,14 +448,26 @@ def create_parser() -> argparse.ArgumentParser:
         help="Exclui uma tarefa.",
     )
 
-    subparsers.add_parser(
-        "mark-in-progress",
-        help="Marca uma tarefa como em andamento.",
+    mark_in_progress_parser = subparsers.add_parser(
+    "mark-in-progress",
+    help="Marca uma tarefa como em andamento.",
     )
 
-    subparsers.add_parser(
-        "mark-done",
-        help="Marca uma tarefa como concluída.",
+    mark_in_progress_parser.add_argument(
+    "task_id",
+    type=int,
+    help="ID da tarefa que será marcada como em andamento.",
+    )
+
+    mark_done_parser = subparsers.add_parser(
+    "mark-done",
+    help="Marca uma tarefa como concluída.",
+    )
+
+    mark_done_parser.add_argument(
+    "task_id",
+    type=int,
+    help="ID da tarefa que será marcada como concluída.",
     )
 
     list_parser = subparsers.add_parser(
@@ -447,16 +521,32 @@ def execute_command(
         
         return
 
+    if args.command == "mark-in-progress":
+       task = service.update_task_status(
+       args.task_id,"in-progress",)
+
+       print(f"Tarefa com ID {task.id} marcada como em andamento.")
+    
+       return
+
+    if args.command == "mark-done":
+        task = service.update_task_status(
+        args.task_id,
+        "done",
+    )
+
+        print(f"Tarefa com ID {task.id} marcada como concluída.")
+    
+        return
+
     if args.command == "list":
         tasks = service.list_tasks(args.status)
         print_tasks(tasks)
         
         return
 
-    print(
-        f"O comando '{args.command}' foi reconhecido, "
-        "mas ainda não foi implementado."
-    )
+    print(f"O comando '{args.command}' foi reconhecido, "
+        "mas ainda não foi implementado.")
 
 #Função Principal: Executa o programa(main)
 def main() -> int:

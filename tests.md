@@ -2,7 +2,7 @@
 
 Este arquivo será utilizado para registrar os testes manuais realizados durante o desenvolvimento.
 
-Checkpoint 1:
+XXXXXXX Checkpoint 1: XXXXXXXX
 
 Comandos planejados
 add
@@ -22,7 +22,7 @@ A descrição não pode ser vazia.
 
 O arquivo tasks.json deve ser criado automaticamente.
 
-Checkpoint 2: estrutura da CLI e armazenamento JSON
+XXXXXXXX Checkpoint 2: estrutura da CLI e armazenamento JSON XXXXXXXXX
 
 Inicialização
 Executar a aplicação sem argumentos.
@@ -59,7 +59,7 @@ Aceitar descrição com acentos.
 Rejeitar descrição ausente.
 Mostrar ajuda com add --help.
 
-Checkpoint 3: adição de tarefas
+XXXXXX Checkpoint 3: adição de tarefas XXXXXXXX
 
 Estrutura e execução
 Validar a sintaxe de task_cli.py.
@@ -89,3 +89,32 @@ Listar todas as tarefas.
 Listar tarefas com status todo.
 Retornar lista vazia para done.
 Retornar lista vazia para in-progress.
+
+Checkpoint 4: alteração de status
+
+Mark in progress
+Receber um ID inteiro.
+Marcar uma tarefa todo como in-progress.
+Preservar o ID.
+Preservar a descrição.
+Preservar createdAt.
+Atualizar updatedAt.
+Exibir a tarefa em list in-progress.
+Remover a tarefa do resultado de list todo.
+Mark done
+Receber um ID inteiro.
+Marcar uma tarefa como done.
+Preservar o ID.
+Preservar a descrição.
+Preservar createdAt.
+Atualizar updatedAt.
+Exibir a tarefa em list done.
+Remover a tarefa do status anterior.
+Validações
+Rejeitar ID igual a zero.
+Rejeitar ID negativo.
+Rejeitar ID não numérico.
+Rejeitar ID ausente.
+Tratar tarefa inexistente.
+Impedir a aplicação repetida do mesmo status.
+Não modificar o JSON quando ocorrer erro.

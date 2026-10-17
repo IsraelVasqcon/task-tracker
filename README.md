@@ -1,4 +1,8 @@
-# Documentação do projeto
+# Documentação do projeto/Project Documentation
+
+!!!Disclaimer!!!
+
+If you are reading this project in English, this project is dedicated to study purposes and to understanding more about programming. Most of the code is in Portuguese, however the code itself calls functions and methods in English because that's how the language understands better. Feel free to explore the functionalities of the project. Enjoi!
 
 Task Tracker CLI
 Aplicação de linha de comando desenvolvida em Python para cadastrar, atualizar, excluir e acompanhar tarefas.
