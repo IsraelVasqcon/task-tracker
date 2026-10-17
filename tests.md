@@ -119,7 +119,7 @@ Tratar tarefa inexistente.
 Impedir a aplicação repetida do mesmo status.
 Não modificar o JSON quando ocorrer erro.
 
-Checkpoint 5: atualização de tarefas
+XXXXXX Checkpoint 5: atualização de tarefas XXXXXXXXXX
 
 Atualização válida
 Atualizar a descrição pelo ID.
@@ -144,3 +144,24 @@ Tratar ID inexistente.
 Integridade
 Não alterar outras tarefas.
 Não modificar o JSON quando ocorrer erro.
+
+Checkpoint 6: exclusão de tarefas
+
+Exclusão válida
+Excluir uma tarefa pelo ID.
+Exibir o ID da tarefa excluída.
+Exibir a descrição da tarefa excluída.
+Remover a tarefa de tasks.json.
+Preservar todas as outras tarefas.
+Não reorganizar os IDs restantes.
+Manter o JSON válido depois da exclusão.
+Validações
+Rejeitar ID igual a zero.
+Rejeitar ID negativo.
+Rejeitar ID não numérico.
+Rejeitar ID ausente.
+Tratar ID inexistente.
+Não modificar o JSON em caso de erro.
+Caso de regressão encontrado
+Buscar corretamente IDs que não estejam na primeira posição.
+Manter o erro de tarefa inexistente fora do laço de busca.

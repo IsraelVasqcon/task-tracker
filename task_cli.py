@@ -342,6 +342,25 @@ class TaskService:
             for task in tasks
             if task.status == status
         ]
+
+#Função: Delete ID task        
+    def delete_task(self, task_id: int) -> Task:
+        """Exclui uma tarefa pelo ID e devolve a tarefa removida."""
+
+        self._validate_task_id(task_id)
+
+        tasks = self._repository.load()
+        task_to_delete = self._find_task_by_id(tasks, task_id)
+
+        updated_tasks = [task
+        for task in tasks
+         if task.id != task_id
+    ]
+
+        self._repository.save(updated_tasks)
+
+        return task_to_delete
+
 #Função: Pega/Get ID
     @staticmethod
     def _get_next_id(tasks: list[Task]) -> int:
@@ -360,10 +379,10 @@ class TaskService:
       """Localiza uma tarefa pelo ID."""
 
       for task in tasks:
-        if task.id == task_id:
-           return task
+       if task.id == task_id:
+        return task
 
-        raise TaskTrackerError(
+      raise TaskTrackerError(
         f"Tarefa com ID {task_id} não encontrada."
     )
 
@@ -464,21 +483,14 @@ def create_parser() -> argparse.ArgumentParser:
 
     add_parser = subparsers.add_parser(
         "add",
-        help="Adiciona uma nova tarefa.",
-    
+        help="Adiciona uma nova tarefa.",    
     )
 
     add_parser.add_argument(
         "description",
-        help="Descrição da nova tarefa.",
-    
+        help="Descrição da nova tarefa.",    
     )
-
-    subparsers.add_parser(
-        "delete",
-        help="Exclui uma tarefa.",
-    )
-    
+   
     update_parser = subparsers.add_parser(
     "update",
     help="Atualiza a descrição de uma tarefa.",
@@ -515,6 +527,17 @@ def create_parser() -> argparse.ArgumentParser:
     "task_id",
     type=int,
     help="ID da tarefa que será marcada como concluída.",
+    )
+    
+    delete_parser = subparsers.add_parser(
+    "delete",
+    help="Exclui uma tarefa.",
+    )
+
+    delete_parser.add_argument(
+    "task_id",
+    type=int,
+    help="ID da tarefa que será excluída.",
     )
 
     list_parser = subparsers.add_parser(
@@ -570,12 +593,21 @@ def execute_command(
     
     if args.command == "update":
        task = service.update_task(
-        args.task_id,
-        args.description,
+       args.task_id,
+       args.description,
     )
-
+       
        print(f"Tarefa com ID {task.id} atualizada com sucesso.")
        
+       return
+   
+   
+    if args.command == "delete":
+       task = service.delete_task(args.task_id)
+
+       print(f"Tarefa com ID {task.id} excluída com sucesso: "
+        f"{task.description}"
+    )
        return
 
     if args.command == "mark-in-progress":
