@@ -1,5 +1,11 @@
 # Task Tracker CLI
 
+Reference Material
+
+This project was developed as part of the lessons available at:
+
+https://roadmap.sh/projects/task-tracker
+
 A command-line application developed in Python for creating, tracking, and managing tasks stored locally in a JSON file.
 
 This project was created to practice Python programming, object-oriented programming, file handling, command-line argument processing, data validation, and version control with Git.
