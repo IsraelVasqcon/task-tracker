@@ -42,7 +42,7 @@ On some Windows installations:
 
 py --version
 Project Structure;
-meu-primeiro-projeto-task-track/
+task-tracker/
 ├── .gitignore
 ├── README.md
 ├── task_cli.py
@@ -58,7 +58,7 @@ Clone the repository:
 git clone REPOSITORY_URL
 Navigate to the project directory:
 
-cd meu-primeiro-projeto-task-track
+cd task-tracker
 Display the help menu:
 
 python task_cli.py --help
