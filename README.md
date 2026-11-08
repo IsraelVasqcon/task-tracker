@@ -48,11 +48,17 @@ On some Windows installations:
 
 py --version
 Project Structure;
+
 task-tracker/
+
 ├── .gitignore
+
 ├── README.md
+
 ├── task_cli.py
+
 └── tests.md
+
 During the first execution, the application automatically creates:
 
 tasks.json
