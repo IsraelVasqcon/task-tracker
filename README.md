@@ -123,11 +123,15 @@ python task_cli.py list
 Example output:
 
 --------------------------------------------------
+
+
 ID:1
 Description: Buy groceries
 Status: todo
 Created at: 2026-10-17T01:10:32.099745+00:00
 Updated at: 2026-10-17T01:10:32.099745+00:00
+
+
 --------------------------------------------------
 List Pending Tasks
 python task_cli.py list todo
@@ -138,14 +142,18 @@ python task_cli.py list done
 Available Statuses
 The application uses three task statuses:
 
+
 # Status Meaning
+
 
 todo: Pending task
 in-progress: Task in progress
 done: Completed task
 
+
 Task Structure
 Each task contains the following properties:
+
 
 Property: Description
 id: Numeric task identifier
@@ -155,21 +163,30 @@ createdAt: Creation date and time
 updatedAt: Date and time of the most recent update
 Example record in tasks.json:
 
+
+
 {
+
   "id": 1,
   "description": "Buy groceries",
   "status": "todo",
   "createdAt": "2026-10-17T01:10:32.099745+00:00",
   "updatedAt": "2026-10-17T01:10:32.099745+00:00"
+  
 }
 
+
+
 Dates are stored in UTC using the ISO 8601 format.
+
 
 JSON File Creation
 If tasks.json does not exist, the application automatically creates the file with an empty list:
 
 []
+
 The file content is validated when it is loaded. The application identifies situations such as:
+
 
 Empty files
 Malformed JSON
@@ -181,8 +198,11 @@ Unrecognized statuses
 Internal Organization
 The application is organized by responsibility.
 
+
 Task
+
 Represents a task and validates:
+
 
 ID
 Description
@@ -245,12 +265,18 @@ Next ID: 5
 If the task with the highest ID is deleted, that number may be reused when a new task is added
 
 A future version may use persistent metadata or a database to prevent identifier reuse
+
+
 ------------------------------------------
 Testing
 ------------------------------------------
+
+
 The manual test scenarios are documented in
 tests.md
 The following scenarios were tested
+
+
 ------------------------------------------
 Creating multiple tasks
 ID generation
